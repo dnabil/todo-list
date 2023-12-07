@@ -25,7 +25,10 @@ const TodoList = () => {
         const updatedTodos = todos.filter((_, i) => i !== index);
         setTodos(updatedTodos);
     };
-
+    const deleteCompletedTodo = (index) => {
+        const updatedCompleted = completed.filter((_, i) => i !== index);
+        setCompleted(updatedCompleted);
+    };
     return (
         <main class="container">
             <h1 style={{ textAlign: 'center', paddingTop: '50px' }}>Todo List</h1>
@@ -55,12 +58,16 @@ const TodoList = () => {
                     ))}
                 </ul>
                 <ul>
-                    {completed.map((todo, index) => (
-                        <li key={index} style={{ textDecoration: 'line-through' }}>
-                            {todo}
-                        </li>
-                    ))}
-                </ul>
+    {completed.map((todo, index) => (
+        <li key={index} style={{ textDecoration: 'line-through' }}>
+            {todo}
+            <IconButton onClick={() => deleteCompletedTodo(index)}>
+                <DeleteIcon />
+            </IconButton>
+        </li>
+    ))}
+</ul>
+
             </div>
         </main>
     );
