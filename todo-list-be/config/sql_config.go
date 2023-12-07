@@ -21,7 +21,7 @@ func NewSQL(log *logrus.Logger) (*gorm.DB){
 	dsn = dsn[(index + len(prefix)):]
 
 
-  	sql, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+  	sql, err := gorm.Open(mysql.Open(dsn), &gorm.Config{TranslateError: true})
 	if err != nil {
 		log.Fatalln("failed to connect to database: ", err)
 	}

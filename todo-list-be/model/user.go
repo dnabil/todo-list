@@ -1,12 +1,16 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
-	ID uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Username  string
-	Email     string
-	Password  string
+	ID uint `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"` 
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+	Password  string `json:"-"`
+
+	Todos []Todo `json:"todos,omitempty"`// has many
 }

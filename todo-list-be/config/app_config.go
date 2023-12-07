@@ -1,7 +1,10 @@
 package config
 
 import (
+	"todo-list-be/app/http/handler"
 	"todo-list-be/app/http/route"
+	"todo-list-be/repo"
+	"todo-list-be/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -16,19 +19,15 @@ type BootstrapConfig struct {
 
 func Bootstrap(cfg *BootstrapConfig) {
 	// DEFINE HANDLERS, USECASE/SERVICE, REPOSITORIES HERE:
-	// UserRepo := repo.NewUserRepo()
+	UserRepo := repo.NewUserRepo(cfg.Log)
 	// TodoRepo := repo.NewTodoRepo()
 
-	// UserService := service.NewUserService()
+	UserService := service.NewUserService(cfg.DB, cfg.Log, UserRepo)
 	// TodoService := service.NewTodoService()
-	
-	// UserHandler := 
-	// TodoHandler := ()
-	
 
 	routeCfg := route.RouteConfig{
 		App: cfg.App,
-		// UserHandler: handler.NewUserHandler(),
+		UserHandler: handler.NewUserHandler(cfg.Log, UserService),
 		// TodoHandler: handler.NewTodoHandler,
 	}
 
