@@ -23,8 +23,6 @@ const Register = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
-
-
                 <input
                     type="email"
                     id="email"
@@ -32,8 +30,6 @@ const Register = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-
-
                 <input
                     type="password"
                     id="password"
@@ -41,11 +37,9 @@ const Register = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-
                 <button type="submit">Register</button>
             </form>
-
-            <p>
+            <p style={{ textAlign: 'center'}}>
                 Already have an account? <Link href="/login">Login</Link>
             </p>
         </div>
