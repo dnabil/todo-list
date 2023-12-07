@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import '../styles/globalui.css';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 
 const TodoList = () => {
     const [input, setInput] = useState('');
@@ -16,6 +18,11 @@ const TodoList = () => {
         const updatedCompleted = [...completed, todos[index]];
         const updatedTodos = todos.filter((_, i) => i !== index);
         setCompleted(updatedCompleted);
+        setTodos(updatedTodos);
+    };
+
+    const deleteTodo = (index) => {
+        const updatedTodos = todos.filter((_, i) => i !== index);
         setTodos(updatedTodos);
     };
 
@@ -41,6 +48,9 @@ const TodoList = () => {
                         <li key={index}>
                             <input type="checkbox" onChange={() => markAsCompleted(index)} />
                             {todo}
+                            <IconButton onClick={() => deleteTodo(index)}>
+                                <DeleteIcon />
+                            </IconButton>
                         </li>
                     ))}
                 </ul>
