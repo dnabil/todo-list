@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import styles from '../styles/global.css'; 
+
+import { Box, Button, Flex, FormControl, Heading, Input, InputGroup, InputLeftElement, InputRightElement, Stack, VStack, useColorModeValue, FormLabel, Text, Link, Icon } from "@chakra-ui/react";
+
+
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -39,21 +43,31 @@ const Register = () => {
 
   return (
     <div>
-      <h1>Register</h1>
+      <Heading textAlign="center" fontSize="24px">
+          Register Your Self
+          </Heading>
+          <Stack spacing={4} pt={2}>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+        <input type="text" placeholder="Name" id="name" name="name" value={formData.name} onChange={handleChange} required />
 
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
+        <input type="email" placeholder="Email" id="email" name="email" value={formData.email} onChange={handleChange} required />
 
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
+        <input type="password" placeholder="Password" id="password" name="password" value={formData.password} onChange={handleChange} required />
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Loading...' : 'Register'}
-        </button>
+        <Button
+                  type="submit"
+                  value="submit"
+                  size="lg"
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                >
+                  Register
+                </Button>
       </form>
+      </Stack>
       {success && <p>Registration successful!</p>}
       {error && <p>Error: {error}</p>}
     </div>
