@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from '../styles/globals.css'; 
+import styles from '../styles/global.css'; 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);

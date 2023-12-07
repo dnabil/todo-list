@@ -1,11 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     margin: 0;
-    padding: 0;
-   }
+    padding-top: 60px;
+}
    
    h1 {
-    color: #333;
+    text-align: center;
+    color: #000000;
     margin-bottom: 20px;
    }
    
@@ -14,6 +17,7 @@ body {
     flex-direction: column;
     width: 300px;
     margin: 0 auto;
+    padding-top: 10px;
    }
    
    label {
@@ -38,5 +42,5 @@ body {
    }
    
    button:hover {
-    background-color: #0056b3;
+    background-color: #024287;
    }
