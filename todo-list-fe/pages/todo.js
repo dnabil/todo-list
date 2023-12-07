@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import '../styles/globalui.css';
+import '../components/navbar.js';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
@@ -42,8 +43,8 @@ const TodoList = () => {
                 <button type="submit">Add Task</button>
             </form>
             <div class="grid">
-                <h5>List</h5>
-                <h5>Completed</h5>
+                <h5 style={{ textAlign: 'center'}}>List</h5>
+                <h5 style={{ textAlign: 'center'}}>Completed</h5>
             </div>
             <div class="grid">
                 <ul>

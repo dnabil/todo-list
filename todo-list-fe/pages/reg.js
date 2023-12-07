@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import '../styles/globalui.css';
 
+
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
