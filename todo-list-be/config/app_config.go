@@ -2,6 +2,7 @@ package config
 
 import (
 	"todo-list-be/app/http/handler"
+	"todo-list-be/app/http/middleware"
 	"todo-list-be/app/http/route"
 	"todo-list-be/repo"
 	"todo-list-be/service"
@@ -27,6 +28,9 @@ func Bootstrap(cfg *BootstrapConfig) {
 
 	routeCfg := route.RouteConfig{
 		App: cfg.App,
+
+		AuthMiddleware: middleware.AuthMiddleware(UserService),
+
 		UserHandler: handler.NewUserHandler(cfg.Log, UserService),
 		// TodoHandler: handler.NewTodoHandler,
 	}

@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func response(c *gin.Context, code int, message string, data any) {
+func Response(c *gin.Context, code int, message string, data any) {
 	var status helper.Status
 	
 	switch code/100 {
@@ -15,7 +15,7 @@ func response(c *gin.Context, code int, message string, data any) {
 	case 4:
 		status = helper.Fail
 	default:
-		errResponse(c, code)
+		ErrResponse(c, code)
 		return
 	}
 
@@ -26,7 +26,7 @@ func response(c *gin.Context, code int, message string, data any) {
 	})
 }
 
-func errResponse(c *gin.Context, code int){
+func ErrResponse(c *gin.Context, code int){
 	c.AbortWithStatusJSON(code, helper.ApiResponse{
 		Status: helper.Error,
 		Message: "Internal Server Error",
