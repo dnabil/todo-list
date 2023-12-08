@@ -23,7 +23,7 @@ func NewUserHandler(log *logrus.Logger, service *service.UserService) *UserHandl
 
 func (h *UserHandler) Create(c *gin.Context){
 	req := new(dto.CreateUserRequest)
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.BindJSON(&req); err != nil {
 		response(c, http.StatusBadRequest, "bad request", nil)
 		return
 	}
