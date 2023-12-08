@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"fmt"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
@@ -36,10 +37,10 @@ func (r *LoginUserRequest) Validate() error{
 type JwtUserClaims struct{
 	jwt.RegisteredClaims
 }
-func NewJwtUserClaims(username string, t time.Duration) (JwtUserClaims){
+func NewJwtUserClaims(id uint, t time.Duration) (JwtUserClaims){
 	return JwtUserClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject: username,
+			Subject: fmt.Sprint(id),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(t)),
 		},
 	}

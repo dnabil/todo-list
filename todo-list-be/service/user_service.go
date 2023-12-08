@@ -97,7 +97,7 @@ func (s *UserService) Login(ctx context.Context, req *dto.LoginUserRequest) (str
 	}
 
 	// token
-	claims := dto.NewJwtUserClaims(user.Username, jwtTtl)
+	claims := dto.NewJwtUserClaims(user.ID, jwtTtl)
 	key := os.Getenv("JWT_KEY")
 	if key == "" {
 		s.Log.Errorln("jwt key is not set")
