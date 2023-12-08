@@ -41,3 +41,25 @@ func (h *UserHandler) Create(c *gin.Context){
 
 	response(c, http.StatusCreated, "user created", user)
 }
+
+func (h *UserHandler) Login(c *gin.Context){
+	req := new(dto.LoginUserRequest)
+	if err := c.BindJSON(&req); err != nil {
+		h.Log.Warnln("bad request:", err)
+		response(c, http.StatusBadRequest, "bad request", nil)
+		return
+	}
+
+	if err := req.Validate(); err != nil {
+		response(c, http.StatusBadRequest, "validation fail", err)
+		return
+	}
+
+	token, err := h.Service.Login(c.Request.Context(), req)
+	if err != nil {
+		response(c, err.Code(), err.Error(), nil)
+		return
+	}
+
+	response(c, http.StatusOK, "login success", dto.LoginUserResponse{Token: token})
+}
