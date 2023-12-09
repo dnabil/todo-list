@@ -38,6 +38,7 @@ func AuthMiddleware(userService *service.UserService) gin.HandlerFunc{
 		err := jwtauth.DecodeToken(token, claims, []byte(jwtKey))
 		if err != nil {
 			handler.Response(c, http.StatusUnauthorized, "unauthorized", nil)
+			c.Abort()
 			return
 		}
 
