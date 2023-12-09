@@ -40,34 +40,40 @@ const TodoList = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                 />
-                <button type="submit">Add Task</button>
+                <div className="container" style={{ width: '200px' }}>
+                    <button type="submit">Add Task</button>
+                </div>
             </form>
-            <div class="grid">
-                <h5 style={{ textAlign: 'center'}}>List</h5>
-                <h5 style={{ textAlign: 'center'}}>Completed</h5>
+            <div class="grid" style={{ paddingTop: '20px' }}>
+                <h5 style={{ textAlign: 'center' }}>List</h5>
+                <h5 style={{ textAlign: 'center' }}>Completed</h5>
             </div>
             <div class="grid">
                 <ul>
                     {todos.map((todo, index) => (
                         <li key={index}>
-                            <input type="checkbox" onChange={() => markAsCompleted(index)} />
+                            <div class="grid">
+                            <input type="checkbox" onChange={() => markAsCompleted(index)}/>
                             {todo}
-                            <IconButton onClick={() => deleteTodo(index)}>
+                            <IconButton onClick={() => deleteTodo(index)} style={{ width: '50px' }}>
                                 <DeleteIcon />
                             </IconButton>
+                            </div>
                         </li>
                     ))}
                 </ul>
                 <ul>
-    {completed.map((todo, index) => (
-        <li key={index} style={{ textDecoration: 'line-through' }}>
-            {todo}
-            <IconButton onClick={() => deleteCompletedTodo(index)}>
-                <DeleteIcon />
-            </IconButton>
-        </li>
-    ))}
-</ul>
+                    {completed.map((todo, index) => (
+                        <li key={index} style={{ textDecoration: 'line-through' }}>
+                            <div class="grid">
+                            {todo}
+                            <IconButton onClick={() => deleteCompletedTodo(index)} style={{ width: '50px' }}>
+                                <DeleteIcon />
+                            </IconButton>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
 
             </div>
         </main>
