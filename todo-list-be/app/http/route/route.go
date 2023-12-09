@@ -22,7 +22,7 @@ func (r *RouteConfig) Load() {
 	api := r.App.Group("/api")
 	api.POST("/users/register", r.UserHandler.Create)
 	api.POST("/users/login", r.UserHandler.Login)
-	// api.GET("/users/{id}", r.UserHandler.Show)
+	api.GET("/users/me", r.AuthMiddleware, r.UserHandler.Me)
 
 
 	todo := api.Group("/todos")

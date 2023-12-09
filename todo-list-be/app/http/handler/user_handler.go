@@ -63,3 +63,19 @@ func (h *UserHandler) Login(c *gin.Context){
 
 	Response(c, http.StatusOK, "login success", dto.LoginUserResponse{Token: token})
 }
+
+func (h *UserHandler) Me(c *gin.Context){
+	auth, _, err := getAuth(c, h.Log)
+	if err != nil {
+		Response(c, err.Code(), err.Error(), nil)
+		return
+	}
+
+	user, err := h.Service.FindById(c.Request.Context(), auth.ID)
+	if err != nil {
+		Response(c, err.Code(), err.Error(), nil)
+		return
+	}
+
+	Response(c, http.StatusOK, "success", user)
+}

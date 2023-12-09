@@ -116,3 +116,27 @@ func (s *UserService) Login(ctx context.Context, req *dto.LoginUserRequest) (str
 
 	return token, nil
 }
+
+func (s *UserService) FindById(ctx context.Context, id uint) (*model.User, errcode.ErrCodeI) {
+	tx := s.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	//
+	user := new(model.User)
+	
+	if err := s.Repo.FindById(tx, user, id); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			s.Log.Warnln("authenticated user, but data is not found in db")
+			return nil, errcode.ErrNotFound
+		}
+		return nil, errcode.ErrInternalServer
+	}
+	//
+
+	if err := tx.Commit().Error; err != nil {
+		s.Log.Warnf("Failed commit transaction : %+v\n", err)
+		return nil, errcode.ErrInternalServer
+	}
+
+	return user, nil
+}
