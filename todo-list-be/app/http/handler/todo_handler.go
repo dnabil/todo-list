@@ -23,7 +23,7 @@ func NewTodoHandler(log *logrus.Logger, service *service.TodoService) *TodoHandl
 
 func (h *TodoHandler) Create(c *gin.Context){
 	req := new(dto.CreateTodoRequest)
-	if err := c.BindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(&req); err != nil {
 		Response(c, http.StatusBadRequest, "bad request", nil)
 		return
 	}
