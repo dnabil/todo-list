@@ -19,6 +19,7 @@ type BootstrapConfig struct {
 }
 
 func Bootstrap(cfg *BootstrapConfig) {
+	cfg.App.Use(middleware.CorsMiddleware())
 	// DEFINE HANDLERS, USECASE/SERVICE, REPOSITORIES HERE:
 	userRepo := repo.NewUserRepo(cfg.Log)
 	todoRepo := repo.NewTodoRepo(cfg.Log)
