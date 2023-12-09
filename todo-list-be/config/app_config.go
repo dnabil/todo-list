@@ -20,19 +20,19 @@ type BootstrapConfig struct {
 
 func Bootstrap(cfg *BootstrapConfig) {
 	// DEFINE HANDLERS, USECASE/SERVICE, REPOSITORIES HERE:
-	UserRepo := repo.NewUserRepo(cfg.Log)
-	// TodoRepo := repo.NewTodoRepo()
+	userRepo := repo.NewUserRepo(cfg.Log)
+	todoRepo := repo.NewTodoRepo(cfg.Log)
 
-	UserService := service.NewUserService(cfg.DB, cfg.Log, UserRepo)
-	// TodoService := service.NewTodoService()
+	userService := service.NewUserService(cfg.DB, cfg.Log, userRepo)
+	todoService := service.NewTodoService(cfg.DB, cfg.Log, todoRepo)
 
 	routeCfg := route.RouteConfig{
 		App: cfg.App,
 
-		AuthMiddleware: middleware.AuthMiddleware(UserService),
+		AuthMiddleware: middleware.AuthMiddleware(userService),
 
-		UserHandler: handler.NewUserHandler(cfg.Log, UserService),
-		// TodoHandler: handler.NewTodoHandler,
+		UserHandler: handler.NewUserHandler(cfg.Log, userService),
+		TodoHandler: handler.NewTodoHandler(cfg.Log, todoService),
 	}
 
 	// load routes

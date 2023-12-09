@@ -6,12 +6,10 @@ import (
 	"strings"
 	"todo-list-be/app/http/handler"
 	"todo-list-be/dto"
-	"todo-list-be/helper/errcode"
 	"todo-list-be/helper/jwtauth"
 	"todo-list-be/service"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 
@@ -45,21 +43,4 @@ func AuthMiddleware(userService *service.UserService) gin.HandlerFunc{
 
 		c.Set("auth", claims)
 	}
-}
-
-// helper, not a middleware
-func GetAuth(c *gin.Context, log *logrus.Logger) (*dto.JwtUserClaims, errcode.ErrCodeI){
-	claims, ok := c.Get("auth")
-	if !ok {
-		log.Warnln("tried to get auth data on unauthorized user!")
-		return nil, errcode.ErrUnauthorized
-	}
-
-	userClaims, ok := claims.(*dto.JwtUserClaims)
-	if !ok {
-		log.Warnf("token can't be parsed to user jwt claims, type is: %T\n", claims)
-		return nil, errcode.ErrUnauthorized
-	}
-
-	return userClaims, nil
 }
