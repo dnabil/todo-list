@@ -78,3 +78,26 @@ func (h *TodoHandler) Update(c *gin.Context){
 	
 	Response(c, http.StatusOK, "update success", todo)
 }
+
+func (h *TodoHandler) Delete(c *gin.Context){
+	req := new(dto.DeleteTodoRequest)
+	if err := c.ShouldBindUri(req); err != nil {
+		Response(c, http.StatusBadRequest, "bad request", nil)
+		return
+	}
+
+	auth, _, err := getAuth(c, h.Log)
+	if err != nil {
+		Response(c, http.StatusUnauthorized, "anauthorized", nil)
+		return
+	}
+
+	req.UserID = auth.ID
+
+	if err := h.Service.Delete(c.Request.Context(), req); err != nil {
+		Response(c, err.Code(), err.Error(), nil)
+		return
+	}
+
+	Response(c, http.StatusOK, "todo deleted", nil)
+}

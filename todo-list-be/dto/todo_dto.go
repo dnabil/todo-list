@@ -59,3 +59,8 @@ func (r *UpdateTodoRequest) Validate() error{
 		validation.Field(&r.IsDone, validation.Required), // https://github.com/go-ozzo/ozzo-validation/issues/79 jadi pake *
 	)
 }
+
+type DeleteTodoRequest struct {
+	ID uint `uri:"todoId"`
+	UserID uint `json:"-"`
+}

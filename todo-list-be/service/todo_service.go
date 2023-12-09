@@ -84,3 +84,32 @@ func (s *TodoService) Update(ctx context.Context, req *dto.UpdateTodoRequest) (*
 	resource := dto.NewTodoResource(todo)
 	return resource, nil
 }
+
+func (s *TodoService) Delete(ctx context.Context, req *dto.DeleteTodoRequest) (errcode.ErrCodeI) {	
+	tx := s.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	// find by id and userid
+	todo := new(model.Todo)
+	if err := s.Repo.FindByIdAndUserId(tx, todo, req.ID, req.UserID); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return errcode.ErrNotFound
+		}
+
+		s.Log.WithError(err).Errorln("failed to find todo by id and user id")
+		return errcode.ErrInternalServer
+	}
+
+	// delete
+	if err := s.Repo.Delete(tx, todo); err != nil {
+		s.Log.WithError(err).Errorln("failed to delete todo")
+		return errcode.ErrInternalServer
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		s.Log.WithError(err).Warnln("Failed commit transaction")
+		return errcode.ErrInternalServer
+	}
+	
+	return nil
+}
