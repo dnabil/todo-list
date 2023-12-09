@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func NewSQL(log *logrus.Logger) (*gorm.DB){
@@ -21,7 +22,10 @@ func NewSQL(log *logrus.Logger) (*gorm.DB){
 	dsn = dsn[(index + len(prefix)):]
 
 
-  	sql, err := gorm.Open(mysql.Open(dsn), &gorm.Config{TranslateError: true})
+  	sql, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		TranslateError: true,
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		log.Fatalln("failed to connect to database: ", err)
 	}

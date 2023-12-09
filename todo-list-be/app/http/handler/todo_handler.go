@@ -101,3 +101,31 @@ func (h *TodoHandler) Delete(c *gin.Context){
 
 	Response(c, http.StatusOK, "todo deleted", nil)
 }
+
+func (h *TodoHandler) IndexByUser(c *gin.Context){
+	req := new(dto.IndexByUserTodoRequest)
+	if err := c.ShouldBindQuery(req); err != nil{
+		Response(c, http.StatusBadRequest, "bad request", nil)
+		return
+	}
+	
+	if err := req.Validate(); err != nil {
+		Response(c, http.StatusBadRequest, "validation fail", err)
+		return
+	}
+
+	auth, _, err := getAuth(c, h.Log)
+	if err != nil {
+		Response(c, err.Code(), err.Error(), nil)
+		return
+	}
+	req.UserID = auth.ID
+
+	todos, err := h.Service.IndexByUser(c.Request.Context(), req)
+	if err != nil {
+		Response(c, err.Code(), err.Error(), nil)
+		return
+	}
+
+	Response(c, http.StatusOK, "found", todos)
+}

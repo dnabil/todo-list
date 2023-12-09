@@ -19,7 +19,7 @@ type TodoResource struct {
 
 	User *model.User `json:"user,omitempty"`
 }
-func NewTodoResource(e *model.Todo) *TodoResource{
+func NewTodoResource(e model.Todo) *TodoResource{
 	resource := new(TodoResource)
 	resource.ID = e.ID
 	resource.UserID = e.UserID
@@ -63,4 +63,24 @@ func (r *UpdateTodoRequest) Validate() error{
 type DeleteTodoRequest struct {
 	ID uint `uri:"todoId"`
 	UserID uint `json:"-"`
+}
+
+type IndexByUserTodoRequest struct {
+	PageMetadata // query
+	IsDone *bool `form:"is_done" json:"is_done"` // query
+	UserID uint `json:"-"`
+}
+func (r *IndexByUserTodoRequest) Validate() error{
+	r.PageMetadata.Populate()
+	// set default value for size/limit
+	if r.Size < 10{
+		r.Size = 10
+	}
+
+	// set max value for size/limit
+	if r.Size > 20 {
+		r.Size = 20
+	}
+	
+	return nil
 }

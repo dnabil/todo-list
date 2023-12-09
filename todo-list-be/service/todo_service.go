@@ -46,7 +46,7 @@ func (s *TodoService) Create(ctx context.Context, req *dto.CreateTodoRequest) (*
 		return nil, errcode.ErrInternalServer
 	}
 
-	resource := dto.NewTodoResource(todo)
+	resource := dto.NewTodoResource(*todo)
 	
 	return resource, nil
 }
@@ -81,7 +81,7 @@ func (s *TodoService) Update(ctx context.Context, req *dto.UpdateTodoRequest) (*
 		return nil, errcode.ErrInternalServer
 	}
 
-	resource := dto.NewTodoResource(todo)
+	resource := dto.NewTodoResource(*todo)
 	return resource, nil
 }
 
@@ -113,3 +113,34 @@ func (s *TodoService) Delete(ctx context.Context, req *dto.DeleteTodoRequest) (e
 	
 	return nil
 }
+
+func (s *TodoService) IndexByUser(ctx context.Context, req *dto.IndexByUserTodoRequest) (*dto.PageResponse[dto.TodoResource], errcode.ErrCodeI) {
+	tx := s.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	todos, err := s.Repo.IndexByUserWithPage(s.DB, req, &req.PageMetadata)
+	if err != nil{
+		if err == gorm.ErrRecordNotFound{
+			return nil, errcode.ErrNotFound
+		}
+		s.Log.WithError(err).Errorln("failed to get all todos by user")
+		return nil, errcode.ErrInternalServer
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		s.Log.WithError(err).Warnln("Failed commit transaction")
+		return nil, errcode.ErrInternalServer
+	}
+	
+	todoResources := make([]dto.TodoResource, len(todos))
+	for i, todo := range todos {
+		todoResources[i] = *dto.NewTodoResource(todo)
+	}
+	
+	todoPages := dto.PageResponse[dto.TodoResource]{
+		Data: todoResources,
+		PageMetadata: req.PageMetadata,
+	}
+
+	return &todoPages, nil
+}	
