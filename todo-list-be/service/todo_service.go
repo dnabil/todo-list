@@ -50,3 +50,37 @@ func (s *TodoService) Create(ctx context.Context, req *dto.CreateTodoRequest) (*
 	
 	return resource, nil
 }
+
+func (s *TodoService) Update(ctx context.Context, req *dto.UpdateTodoRequest) (*dto.TodoResource, errcode.ErrCodeI) {
+	tx := s.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	//
+	// find by id and userid
+	todo := new(model.Todo)
+	if err := s.Repo.FindByIdAndUserId(tx, todo, req.ID, req.UserID); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, errcode.ErrNotFound
+		}
+
+		s.Log.WithError(err).Errorln("failed to find todo by id and user id")
+		return nil, errcode.ErrInternalServer
+	}
+
+	// update
+	todo.Name = req.Name
+	todo.IsDone = *req.IsDone
+	if err := s.Repo.Update(tx, todo); err != nil {
+		s.Log.WithError(err).Errorln("failed to update(s) todo")
+		return nil, errcode.ErrInternalServer
+	}
+	//
+
+	if err := tx.Commit().Error; err != nil {
+		s.Log.WithError(err).Warnln("Failed commit transaction")
+		return nil, errcode.ErrInternalServer
+	}
+
+	resource := dto.NewTodoResource(todo)
+	return resource, nil
+}

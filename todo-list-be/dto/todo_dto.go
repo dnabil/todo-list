@@ -44,3 +44,18 @@ func (r *CreateTodoRequest) Validate() error{
 		validation.Field(&r.Name, validation.Required, validation.Length(2, 255)),
 	)
 }
+
+type UpdateTodoRequest struct {
+	ID uint `json:"id"`
+	UserID uint `json:"-"`
+
+	Name string `json:"name"`
+	IsDone *bool `json:"is_done"`
+}
+func (r *UpdateTodoRequest) Validate() error{
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ID, validation.Required),
+		validation.Field(&r.Name, validation.Required, validation.Length(2, 255)),
+		validation.Field(&r.IsDone, validation.Required), // https://github.com/go-ozzo/ozzo-validation/issues/79 jadi pake *
+	)
+}

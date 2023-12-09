@@ -28,6 +28,7 @@ func (r *RouteConfig) Load() {
 	todo := api.Group("/todos")
 	todo.Use(r.AuthMiddleware)
 	todo.POST("/", r.TodoHandler.Create)
+	todo.PUT("/", r.TodoHandler.Update)
 	// api.GET("/todos", r.TodoHandler.Index) // ada yang completed ada yang ngga (param)
 	// api.DELETE("/todos", r.TodoHandler.DELETE)
 }
