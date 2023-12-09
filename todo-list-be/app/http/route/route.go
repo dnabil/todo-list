@@ -31,4 +31,5 @@ func (r *RouteConfig) Load() {
 	todo.PUT("/", r.TodoHandler.Update)
 	todo.GET("/", r.TodoHandler.IndexByUser)
 	todo.DELETE("/:todoId", r.TodoHandler.Delete)
+	todo.PATCH("/is-done", r.TodoHandler.UpdateIsDone)
 }

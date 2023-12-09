@@ -56,7 +56,7 @@ func (r *UpdateTodoRequest) Validate() error{
 	return validation.ValidateStruct(r,
 		validation.Field(&r.ID, validation.Required),
 		validation.Field(&r.Name, validation.Required, validation.Length(2, 255)),
-		validation.Field(&r.IsDone, validation.Required), // https://github.com/go-ozzo/ozzo-validation/issues/79 jadi pake *
+		validation.Field(&r.IsDone, validation.NotNil), // https://github.com/go-ozzo/ozzo-validation/issues/79 jadi pake *
 	)
 }
 
@@ -83,4 +83,16 @@ func (r *IndexByUserTodoRequest) Validate() error{
 	}
 	
 	return nil
+}
+
+type UpdateIsDoneTodoRequest struct{
+	ID uint `json:"id"`
+	UserID uint `json:"-"`
+	IsDone *bool `json:"is_done"`
+}
+func (r *UpdateIsDoneTodoRequest) Validate() error{
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ID, validation.Required),
+		validation.Field(&r.IsDone, validation.NotNil),
+	)
 }

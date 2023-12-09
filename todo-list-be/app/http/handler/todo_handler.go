@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"todo-list-be/dto"
 	"todo-list-be/service"
@@ -58,6 +59,7 @@ func (h *TodoHandler) Update(c *gin.Context){
 	}
 	
 	if err := req.Validate(); err != nil {
+		fmt.Printf("%v %T\n", err, err)
 		Response(c, http.StatusBadRequest, "validation fail", err)
 		return
 	}
@@ -128,4 +130,32 @@ func (h *TodoHandler) IndexByUser(c *gin.Context){
 	}
 
 	Response(c, http.StatusOK, "found", todos)
+}
+
+func (h *TodoHandler) UpdateIsDone(c *gin.Context){
+	req := new(dto.UpdateIsDoneTodoRequest)
+	if err := c.ShouldBindJSON(req); err != nil{
+		Response(c, http.StatusBadRequest, "bad request", nil)
+		return
+	}
+
+	if err := req.Validate(); err != nil {
+		Response(c, http.StatusBadRequest, "validation fail", err)
+		return
+	}
+
+	auth, _, err := getAuth(c, h.Log)
+	if err != nil {
+		Response(c, err.Code(), err.Error(), nil)
+		return
+	}
+	req.UserID = auth.ID
+
+	todo, err := h.Service.UpdateIsDone(c.Request.Context(), req)
+	if err != nil {
+		Response(c, err.Code(), err.Error(), nil)
+		return
+	}
+
+	Response(c, http.StatusOK, fmt.Sprintf("todo updated to %t", *req.IsDone), todo)
 }

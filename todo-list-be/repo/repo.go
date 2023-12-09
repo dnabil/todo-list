@@ -19,6 +19,10 @@ func (r *Repo[T]) Update(db *gorm.DB, entity *T) error {
 	return db.Save(entity).Error
 }
 
+func (r *Repo[T]) Updates(db *gorm.DB, entity *T, fields any) error {
+	return db.Model(entity).Updates(fields).Error
+}
+
 func (r *Repo[T]) Delete(db *gorm.DB, entity *T) error {
 	return db.Delete(entity).Error
 }
