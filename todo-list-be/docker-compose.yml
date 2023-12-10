@@ -1,0 +1,36 @@
+version: "3.4"
+
+services:
+  todolist-be:
+    image: dnabil/todolist-be:0.0.1
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - DB_STRING=mysql://root:DBPASSWORD@tcp(db:3306)/todolist?charset=utf8mb4&parseTime=True&loc=Local
+      - PORT=5555
+      # - ENV JWT_TTL=5h
+      # - ENV JWT_KEY=my-secret-key
+    ports:
+      - 5555:5555
+    depends_on:
+      - db
+    restart: on-failure
+    networks:
+      - todolist-network
+
+  db:
+    image: mariadb:11.2.2
+    environment:
+      - MARIADB_ROOT_PASSWORD=DBPASSWORD
+      - MARIADB_DATABASE=todolist
+    # volumes:
+    # - <PATH>:/var/lib/mysql
+    ports:
+      - 3306
+    restart: on-failure
+    networks:
+      - todolist-network
+
+networks:
+  todolist-network:
