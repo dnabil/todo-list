@@ -5,7 +5,7 @@ import '../styles/globalui.css';
 import { useRouter } from "next/router";
 
 const Register = () => {
-    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -14,7 +14,7 @@ const Register = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const values = {
-            name,
+            username,
             email,
             password,
         };
@@ -46,9 +46,9 @@ const Register = () => {
                 <input
                     type="text"
                     id="name"
-                    placeholder='Name'
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    placeholder='Username'
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
                 <input
                     type="email"
