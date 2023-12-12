@@ -23,7 +23,7 @@ ENV DB_STRING=mysql://root:@tcp(localhost:3306)/todolist?charset=utf8mb4&parseTi
 ENV JWT_TTL=5h
 ENV JWT_KEY=my-secret-key
 # --- end of env
-CMD [ "/migrate", " -path", "migrations", "-database", "${DB_STRING}", "up" ]
+CMD [ "/migrate", "-path", ".", "-database", "${DB_STRING}", "up" ]
 ENTRYPOINT /app
 LABEL Name=dnabil/todolist-be Version=0.0.1
 EXPOSE 5555

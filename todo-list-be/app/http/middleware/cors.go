@@ -6,5 +6,9 @@ import (
 )
 
 func CorsMiddleware() gin.HandlerFunc {
-	return cors.Default()
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{"*"}
+	
+	return cors.New(config)
 }
