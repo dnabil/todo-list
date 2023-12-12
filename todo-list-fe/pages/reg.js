@@ -33,7 +33,7 @@ const Register = () => {
 
             alert(res.data.message);
             //setToken(res.data.token);
-            router.push("/todo");
+            router.push('/todo');
         } catch (error) {
             console.error("Error during register:", error);
         }

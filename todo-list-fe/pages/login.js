@@ -36,7 +36,7 @@ const LoginPage = () => {
           }
     
           //setToken(res.data.token);
-          router.push("/todo");
+          router.push('/todo');
         } catch (error) {
           console.error("Error during login:", error);
         }
