@@ -1,16 +1,42 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 import '../styles/globalui.css';
-
+import { useRouter } from "next/router";
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const router = useRouter();
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Form Submitted: ', { name, email, password });
+        const values = {
+            name,
+            email,
+            password,
+        };
+
+        registerUser(values);
+    };
+
+    const registerUser = async (user) => {
+        try {
+            const res = await axios.post('http://localhost:5555/api/users/register', user);
+
+            if (res.status !== 200) {
+                alert(res.data.message);
+                return;
+            }
+
+            alert(res.data.message);
+            //setToken(res.data.token);
+            router.push("/todo");
+        } catch (error) {
+            console.error("Error during register:", error);
+        }
     };
 
     return (
@@ -40,7 +66,7 @@ const Register = () => {
                 />
                 <button type="submit">Register</button>
             </form>
-            <p style={{ textAlign: 'center'}}>
+            <p style={{ textAlign: 'center' }}>
                 Already have an account? <Link href="/login">Login</Link>
             </p>
         </div>

@@ -1,15 +1,30 @@
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import '../styles/globalui.css';
 
 const SigninSignup = () => {
     const router = useRouter();
 
-    const handleRegister = () => {
-        router.push('/reg');
+    const handleRegister = async () => {
+        try {
+            const res = await axios.post('http://localhost:5555/api/users/register');
+            if (res.status === 200) {
+                router.push('/reg');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const handleLogin = () => {
-        router.push('/login');
+    const handleLogin = async () => {
+        try {
+            const res = await axios.post('http://localhost:5555/api/users/login');
+            if (res.status === 200) {
+                router.push('/login');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
