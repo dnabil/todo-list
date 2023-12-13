@@ -8,14 +8,14 @@ WORKDIR /go/src/app
 COPY . .
 RUN go get -d -v ./...
 RUN go build -o /go/bin/app -v app/http/main.go
-RUN mv db/migrations /go/bin/
+RUN cp -r db/migrations /go/bin
 
 #final stage
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 COPY --from=builder /go/bin/app /app
 COPY --from=builder /go/bin/migrate /migrate
-COPY --from=builder /go/bin/migrations /
+COPY --from=builder /go/bin/migrations /migrations
 # default values for env (can be overidden using -e)
 ENV APP_DEBUG=false
 ENV PORT=5555
@@ -23,7 +23,7 @@ ENV DB_STRING=mysql://root:@tcp(localhost:3306)/todolist?charset=utf8mb4&parseTi
 ENV JWT_TTL=5h
 ENV JWT_KEY=my-secret-key
 # --- end of env
-CMD [ "/migrate", "-path", ".", "-database", "${DB_STRING}", "up" ]
+CMD [ "/migrate", "-path", "/migrations", "-database", "${DB_STRING}", "up" ]
 ENTRYPOINT /app
 LABEL Name=dnabil/todolist-be Version=0.0.1
 EXPOSE 5555
