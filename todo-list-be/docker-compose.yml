@@ -1,8 +1,8 @@
-version: "3.4"
+version: "3.9"
 
 services:
-  todolist-be:
-    image: dnabil/todolist-be:0.0.1
+  app:
+    image: dnabil/todolist-be
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -14,10 +14,10 @@ services:
     ports:
       - 5555:5555
     depends_on:
-      - db
-    restart: on-failure
+      db:
+        condition: service_healthy
     networks:
-      - todolist-network
+      - todolist-be-network
 
   db:
     image: mariadb:11.2.2
@@ -28,9 +28,20 @@ services:
     # - <PATH>:/var/lib/mysql
     ports:
       - 3306
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized",
+        ]
+      timeout: 10s
+      retries: 15
     restart: on-failure
     networks:
-      - todolist-network
+      - todolist-be-network
 
 networks:
-  todolist-network:
+  todolist-be-network:
