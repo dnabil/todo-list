@@ -1,9 +1,10 @@
 //todo.js
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import '../styles/globalui.css';
 import '../components/navbar.js';
+import { AuthContext } from "../utils/AuthContext";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
@@ -11,6 +12,7 @@ const TodoList = () => {
     const [name, setName] = useState('');
     const [todos, setTodos] = useState([]);
     const [completed, setCompleted] = useState([]);
+    const { token, setToken } = useContext(AuthContext);
 
     useEffect(() => {
         getTodos();
@@ -40,11 +42,12 @@ const TodoList = () => {
     // };
 
     const getTodos = async () => {
-        const response = await axios.get('http://localhost:5555/api/todos', {
-            headers: {
-                is_done: false,
-            },
-          });
+        const response = await axios.get('http://localhost:5555/api/todos');
+        // , {
+        //     headers: {
+        //         is_done: false,
+        //     },
+        //   });
         setTodos(response.data);
     };
 

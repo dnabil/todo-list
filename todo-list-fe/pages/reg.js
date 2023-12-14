@@ -26,7 +26,7 @@ const Register = () => {
         try {
             const res = await axios.post('http://localhost:5555/api/users/register', user);
 
-            if (res.status !== 200) {
+            if (res.status !== 201) {
                 alert(res.data.message);
                 return;
             }

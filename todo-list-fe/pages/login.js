@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { useContext, useState, useEffect } from "react";
 import Link from 'next/link';
+import axios from 'axios';
 import '../styles/globalui.css';
-//import api from '../pages/api';
 import { useRouter } from "next/router";
-//import backend from "../pages/api";
+import { AuthContext } from "../utils/AuthContext";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
+    const { setToken } = useContext(AuthContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -41,6 +42,14 @@ const LoginPage = () => {
           console.error("Error during login:", error);
         }
       };
+
+      useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        if (token) {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+      }, []);
 
     return (
         <main className="container" style={{ width: '30%' }}>
