@@ -54,11 +54,16 @@ const TodoList = () => {
     const getCompletedTodos = async () => {
         const response = await axios.get('http://localhost:5555/api/todos', {
             headers: {
-                is_done: true,
+                //is_done: true,
+             "Ngrok-Skip-Browser-Warning": "69420",
             },
           });
         setCompleted(response.data);
-    }; //saia bingung
+        console.log(completed);
+        console.log(response.data);
+    }; 
+    
+    //saia bingung
 
     const addTodo = async (e) => {
         e.preventDefault();
@@ -84,7 +89,7 @@ const TodoList = () => {
     };
 
     return (
-        <main class="container">
+        <main className="container">
             <h1 style={{ textAlign: 'center', paddingTop: '50px' }}>Todo List</h1>
             <form onSubmit={addTodo}>
                 <input
@@ -98,15 +103,15 @@ const TodoList = () => {
                     <button type="submit">Add Task</button>
                 </div>
             </form>
-            <div class="grid" style={{ paddingTop: '20px' }}>
+            <div className="grid" style={{ paddingTop: '20px' }}>
                 <h5 style={{ textAlign: 'center' }}>List</h5>
                 <h5 style={{ textAlign: 'center' }}>Completed</h5>
             </div>
-            <div class="grid">
+            <div className="grid">
                 <ul>
                     {todos.map((todo, index) => (
                         <li key={index}>
-                            <div class="grid">
+                            <div className="grid">
                                 <input type="checkbox" onChange={() => markAsCompleted(index)} />
                                 {todo}
                                 <IconButton onClick={() => deleteTodo(index)} style={{ width: '50px' }}>
@@ -119,7 +124,7 @@ const TodoList = () => {
                 <ul>
                     {completed.map((todo, index) => (
                         <li key={index} style={{ textDecoration: 'line-through' }}>
-                            <div class="grid">
+                            <div className="grid">
                                 {todo}
                                 <IconButton onClick={() => deleteCompletedTodo(index)} style={{ width: '50px' }}>
                                     <DeleteIcon />
