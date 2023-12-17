@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+
+data:
+  nginx.conf: |
+    http {
+      include mime.types;
+
+      upstream backend{
+        server service-apploadbalancer.default.svc.cluster.local:81 fail_time=6s  max_fails=1;
+        server service-apploadbalancer2.default.svc.cluster.local:82 backup;
+      }
+
+      server{
+        listen 80;
+
+        location / {
+          proxy_pass http://backend;
+        }
+      }
+    }
+    events {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+      nodePort: 30008
+  selector:
+    app: nginx

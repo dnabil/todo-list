@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-todolistbe-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      name: app-dbtodolistbe
+    # strategy:
+    #   rollingUpdate:
+    #     maxSurge: 25%
+    #     maxUnavailable: 25%
+    # type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: app-dbtodolistbe
+    spec:
+      # initContainers:
+      # Init containers are exactly like regular containers, except:
+      # - Init containers always run to completion.
+      # - Each init container must complete successfully before the next one starts.
+      containers:
+        - name: container-dbtodolistbe
+          image: mariadb:11.2.2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 200Mi
+          env:
+            # - name: MARIADB_ROOT_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: secret-mariadb
+            #       key: mariadb-root-password
+            - name: MARIADB_ROOT_HOST
+              value: "%"
+            - name: MARIADB_DATABASE
+              value: "todolist"
+            - name: MARIADB_ALLOW_EMPTY_ROOT_PASSWORD
+              value: "1"
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/mysql
+            - name: root
+              mountPath: /shared-files
+      volumes:
+        - name: db-data
+          hostPath:
+            path: /app/todolist-be/db
+        - name: root
+          hostPath:
+            path: /app/todolist-be/shared-files
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-dbclusterip
+spec:
+  # db cukup ClusterIP saja, tidak usah ekspose ke publik
+  type: ClusterIP
+  selector:
+    name: app-dbtodolistbe
+  ports:
+    - port: 3306
+      targetPort: 3306

@@ -1,0 +1,8 @@
+# harusnya file ini di hide (jangan di commit), yang perlu tau key sama namanya doang.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secret-mariadb
+type: Opaque
+data:
+  mariadb-root-password: cGFzc3dvcmQ= # 'password' encoded to base64

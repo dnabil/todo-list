@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-todolistbe-deployment
+spec:
+  selector:
+    matchLabels:
+      name: app-todolistbe
+  # replicas: 1
+  # strategy:
+  #   rollingUpdate:
+  #     maxSurge: 25%
+  #     maxUnavailable: 25%
+  #   type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: app-todolistbe
+    spec:
+      containers:
+        - name: container-todolistbe
+          image: dnabil/todolist-be
+          resources:
+            limits:
+              cpu: 250m
+              memory: 32Mi
+          env:
+            - name: PORT
+              value: "80"
+            - name: DB_STRING
+              value: "mysql://root:@tcp(service-dbclusterip.default.svc.cluster.local:3306)/todolist?charset=utf8mb4&parseTime=True&loc=Local"
+          ports:
+            - containerPort: 80
+              name: app-todolistbe
+      restartPolicy: Always
+---
+# service 1
+# for exposing app port to public
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-apploadbalancer
+spec:
+  # NodePort=ekspos ke cluster, LoadBalancer=ekspos publik
+  type: LoadBalancer
+  selector:
+    name: app-todolistbe
+  ports:
+    - port: 81
+      targetPort: 80
+
+---
+# service 2
+# for exposing app port to public (redundant)
+# note to self: for implementing failover n failback between service 1 n service 2 using nginx
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-apploadbalancer2
+spec:
+  # NodePort=ekspos ke cluster, LoadBalancer=ekspos publik
+  type: LoadBalancer
+  selector:
+    name: app-todolistbe
+  ports:
+    - port: 82
+      targetPort: 80
