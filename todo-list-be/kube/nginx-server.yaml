@@ -9,7 +9,7 @@ data:
       include mime.types;
 
       upstream backend{
-        server service-apploadbalancer.default.svc.cluster.local:81 fail_time=6s  max_fails=1;
+        server service-apploadbalancer.default.svc.cluster.local:81 fail_timeout=6s  max_fails=1;
         server service-apploadbalancer2.default.svc.cluster.local:82 backup;
       }
 
